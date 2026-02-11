@@ -32,4 +32,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto-update: Wasserstand logged"
-          file_pattern: 'agger_wasserstand.csv .alert_sent'
+          file_pattern: 'agger_wasserstand.csv .alert_sent*'
