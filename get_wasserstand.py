@@ -53,19 +53,7 @@ last_ts, last_val = obj["data"][-1]
 current_val = float(last_val)
 dt = datetime.fromisoformat(last_ts)
 
-# 2. THRESHOLD & SPAM LOGIC
-if current_val > THRESHOLD:
-    if not flag_path.exists():
-        send_ntfy_alert(current_val)
-        flag_path.touch() # Create the "lock" file
-    else:
-        print("Still above threshold, but alert already sent.")
-else:
-    if flag_path.exists():
-        print("Water level back to normal. Resetting alert flag.")
-        flag_path.unlink() # Delete the flag so we can alert again next time
-
-# 3. SAVE TO CSV
+# 2. SAVE TO CSV
 datum = dt.strftime("%d.%m.%Y")
 zeit = dt.strftime("%H:%M")
 fieldnames = ["Datum", "Zeit", "Wert", "Einheit", "Station", "Zeit der Abfrage"]
