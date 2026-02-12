@@ -53,7 +53,14 @@ last_ts, last_val = obj["data"][-1]
 current_val = float(last_val)
 dt = datetime.fromisoformat(last_ts)
 
-# 2. SAVE TO CSV
+# 2. THRESHOLD CHECK (This part was missing!)
+if current_val > THRESHOLD:
+    send_ntfy_alert(current_val)
+    print(f"ALARM! {current_val} cm is above {THRESHOLD} cm.")
+else:
+    print(f"Normal level: {current_val} cm.")
+
+# 3. SAVE TO CSV
 datum = dt.strftime("%d.%m.%Y")
 zeit = dt.strftime("%H:%M")
 fieldnames = ["Datum", "Zeit", "Wert", "Einheit", "Station", "Zeit der Abfrage"]
