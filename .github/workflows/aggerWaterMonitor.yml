@@ -2,7 +2,7 @@ name: Agger Water Level Monitor
 
 on:
   schedule:
-    - cron: '* * * * *'  # Runs every minute
+    - cron: '33 * * * *'  # Runs every hour at minute 33
   workflow_dispatch:      # Allows you to click a button to run it manually
 
 jobs:
