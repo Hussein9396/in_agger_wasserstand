@@ -6,7 +6,7 @@ from pathlib import Path
 
 # --- CONFIGURATION ---
 URL = "https://www.hochwasserportal.nrw.de/data/internet/stations/104/2728759000100/S/week.json"
-THRESHOLD = 75.0  # Set your limit in cm
+THRESHOLD = 250.0  # Set your limit in cm
 NTFY_TOPIC = os.getenv("NTFY_TOPIC") # Pulls from GitHub Secrets
 
 headers = {
@@ -18,7 +18,6 @@ headers = {
 # Paths
 base_path = Path(__file__).parent
 csv_path = base_path / "agger_wasserstand.csv"
-flag_path = base_path / ".alert_sent"
 
 def send_ntfy_alert(val):
     if not NTFY_TOPIC:
