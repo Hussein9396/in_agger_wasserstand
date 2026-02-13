@@ -1,12 +1,13 @@
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import csv
 from pathlib import Path
 
+
 # --- CONFIGURATION ---
 URL = "https://www.hochwasserportal.nrw.de/data/internet/stations/104/2728759000100/S/week.json"
-THRESHOLD = 250.0  # Set your limit in cm
+THRESHOLD = 250.0  # limit in cm
 NTFY_TOPIC = os.getenv("NTFY_TOPIC") # Pulls from GitHub Secrets
 
 headers = {
@@ -52,25 +53,26 @@ last_ts, last_val = obj["data"][-1]
 current_val = float(last_val)
 dt = datetime.fromisoformat(last_ts)
 
-# 2. THRESHOLD CHECK (This part was missing!)
+# 2. THRESHOLD CHECK
 if current_val > THRESHOLD:
     send_ntfy_alert(current_val)
-    print(f"ALARM! {current_val} cm is above {THRESHOLD} cm.")
+    print(f"ALARM! {current_val} cm ist über {THRESHOLD} cm.")
 else:
-    print(f"Normal level: {current_val} cm.")
+    print(f"Normalstand: {current_val} cm.")
 
 # 3. SAVE TO CSV
-datum = dt.strftime("%d.%m.%Y")
-zeit = dt.strftime("%H:%M")
+german_time = datetime.now() + timedelta(hours=1)  # Convert to German time (UTC+1)
+current_date = dt.strftime("%d.%m.%Y")
+current_time = dt.strftime("%H:%M")
 fieldnames = ["Datum", "Zeit", "Wert", "Einheit", "Station", "Zeit der Abfrage"]
 
 row = {
-    "Datum": datum,
-    "Zeit": zeit,
+    "Datum": current_date,
+    "Zeit": current_time,
     "Wert": current_val,
     "Einheit": unit,
     "Station": station_name,
-    "Zeit der Abfrage": datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
+    "Zeit der Abfrage": german_time.strftime("%d.%m.%Y %H:%M:%S") + " (UTC+1)",
 }
 
 file_exists = csv_path.exists()
