@@ -71,7 +71,7 @@ current_val_german = f"{current_val:.1f}".replace(".", ",")
 row = {
     "Datum": current_date,
     "Zeit": current_time,
-    "Wert": current_val,
+    "Wert": current_val_german,
     "Einheit": unit,
     "Station": station_name,
     "Zeit der Abfrage": german_time.strftime("%d.%m.%Y %H:%M:%S") + " (UTC+1)",
