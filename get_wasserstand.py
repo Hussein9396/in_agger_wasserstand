@@ -66,6 +66,8 @@ current_date = dt.strftime("%d.%m.%Y")
 current_time = dt.strftime("%H:%M")
 fieldnames = ["Datum", "Zeit", "Wert", "Einheit", "Station", "Zeit der Abfrage"]
 
+current_val_german = f"{current_val:.1f}".replace(".", ",")
+
 row = {
     "Datum": current_date,
     "Zeit": current_time,
