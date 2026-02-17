@@ -7,7 +7,7 @@ from pathlib import Path
 
 # --- CONFIGURATION ---
 URL = "https://www.hochwasserportal.nrw.de/data/internet/stations/104/2728759000100/S/week.json"
-THRESHOLD = 250.0  # limit in cm
+THRESHOLD = 150.0  # limit in cm
 NTFY_TOPIC = os.getenv("NTFY_TOPIC") # Pulls from GitHub Secrets
 
 headers = {
