@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Pegel-Monitor Agger</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background: #eef2f7; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); max-width: 900px; margin: auto; }
+        h1 { color: #0077be; border-bottom: 2px solid #0077be; padding-bottom: 10px; }
+        .current-val { font-size: 2em; font-weight: bold; color: #004a99; margin: 10px 0; }
+        .chart-container { height: 400px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>Pegelstand Agger (Station Overath)</h1>
+    <div class="current-val">Aktueller Pegel: <span id="latest-pegel">--</span> cm</div>
+    <p>Letzte Messung: <span id="latest-time">--</span></p>
+
+    <div class="chart-container">
+        <canvas id="wasserChart"></canvas>
+    </div>
+</div>
+
+<script>
+    async function loadPegel() {
+        const response = await fetch('wasserstand_data.json');
+        const data = await response.json();
+
+        const labels = data.map(d => d.label);
+        const values = data.map(d => d.pegel);
+
+        document.getElementById('latest-pegel').innerText = values[values.length - 1];
+        document.getElementById('latest-time').innerText = labels[labels.length - 1];
+
+        new Chart(document.getElementById('wasserChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Wasserstand in cm',
+                    data: values,
+                    borderColor: '#0077be',
+                    backgroundColor: 'rgba(0, 119, 190, 0.2)',
+                    fill: true,
+                    tension: 0.2,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { 
+                        beginAtZero: false,
+                        title: { display: true, text: 'Zentimeter (cm)' }
+                    }
+                }
+            }
+        });
+    }
+    loadPegel();
+</script>
+</body>
+</html>

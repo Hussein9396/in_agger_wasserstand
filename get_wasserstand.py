@@ -3,7 +3,7 @@ import requests
 from datetime import datetime, timedelta
 import csv
 from pathlib import Path
-
+import json
 
 # --- CONFIGURATION ---
 URL = "https://www.hochwasserportal.nrw.de/data/internet/stations/104/2728759000100/S/week.json"
@@ -85,3 +85,34 @@ with csv_path.open("a", newline="", encoding="utf-8") as f:
     writer.writerow(row)
 
 print(f"Logged: {row}")
+
+def update_wasserstand_dashboard():
+    """Liest die Wasserstandsdaten aus der CSV-Datei und aktualisiert das Dashboard."""
+    csv_path = base_path / "agger_wasserstand.csv"
+    dashboard_data = []
+
+    if not csv_path.exists():
+        print("CSV-Datei nicht gefunden. Dashboard wird nicht aktualisiert.")
+        return
+    
+    with csv_path.open("r", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        rows = list(reader)
+
+        for row in rows[-100:]:
+            try:
+                wert = float(row["Wert"].replace(",", "."))
+                dashboard_data.append({
+                    "label": f"{row['Datum']} {row['Zeit']}",
+                    "pegel": wert
+                })
+            except ValueError:
+                continue
+
+    json_path = base_path / "dashboard_data.json"
+    with json_path.open("w", encoding="utf-8") as f:
+        json.dump(dashboard_data, f, ensure_ascii=False, indent=2)
+    print(f"Dashboard aktualisiert mit {len(dashboard_data)} Einträgen.")
+
+if __name__ == "__main__":
+    update_wasserstand_dashboard()
