@@ -99,7 +99,7 @@ def update_wasserstand_dashboard():
         reader = csv.DictReader(f, delimiter=";")
         rows = list(reader)
 
-        for row in rows[-100:]:
+        for row in rows[-150:]: #
             try:
                 wert = float(row["Wert"].replace(",", "."))
                 dashboard_data.append({
